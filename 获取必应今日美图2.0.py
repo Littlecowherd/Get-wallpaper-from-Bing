@@ -6,7 +6,7 @@
 - email   : Littlecowherd@protonmail.com
 - date    : 2017/10/17 15:17
 - usage   : 获取必应今日美图-GUI界面，添加一周内壁纸（重写Download）
-- version : 3.0 
+- version : 3.0 （自用版：默认保存位置为 :/壁纸）
 """
 import json
 import os
@@ -37,14 +37,12 @@ class Window(Frame):
         self.pack(fill=BOTH, expand=1)
 
     def save(self):
-        pass
-        """
         path = 'D:\\壁纸'
         try:
             shutil.move(self.name, path)
         except Exception as error:
             messagebox.showerror("错误", error)
-        """
+
     def delete(self):
         os.unlink(self.name)
 
@@ -141,7 +139,10 @@ class Window(Frame):
     def showimg(self):
         if self.flag:
             load = Image.open(self.name)
-            render = ImageTk.PhotoImage(load)
+            # 根据屏幕大小对显示的图片进行调整
+
+            imgg = load.resize((self.full_width, self.full_height))
+            render = ImageTk.PhotoImage(imgg)
 
             img = Label(self, image=render)
             self.img = img
@@ -154,6 +155,7 @@ class Window(Frame):
             img.bind("<Button-1>", func=self.changeimg)
             # 按tab查看图片信息,,改为点击图片中央位置
             # img.bind("<BackSpace>", func=self.showinfo)
+            # img.place(x=0, y=0)
             img.place(x=0, y=0)
         else:
             error = Label(self, text="访问出错！")
